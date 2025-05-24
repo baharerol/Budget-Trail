@@ -16,7 +16,7 @@ public class UserService {
 
     public User registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new RuntimeException("Bu e-posta adresi zaten kullanılıyor.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -24,6 +24,6 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
     }
 } 

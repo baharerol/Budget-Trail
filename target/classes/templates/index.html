@@ -318,6 +318,55 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .profile-link:hover {
+            color: var(--primary-color);
+        }
+
+        .logout-form {
+            display: inline;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .user-menu {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -325,9 +374,22 @@
         <div class="navbar-container">
             <a href="/" class="navbar-brand">Budget Trail</a>
             <div class="navbar-menu">
-                <a href="/swagger-ui/">API Dokümantasyonu</a>
-                <a href="/login">Giriş Yap</a>
-                <a href="/register">Kayıt Ol</a>
+                <div sec:authorize="!isAuthenticated()">
+                    <a href="/login">Giriş Yap</a>
+                    <a href="/register">Kayıt Ol</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" class="user-menu">
+                    <a href="/profile" class="profile-link">
+                        <i class="fas fa-user"></i>
+                        Profilim
+                    </a>
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Çıkış Yap
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
