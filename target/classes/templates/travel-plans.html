@@ -209,52 +209,52 @@
 
         <div th:if="${!preferences.empty}" class="plans-grid">
             <div th:each="pref : ${preferences}" class="plan-card">
-                <div th:if="${recommendations != null && recommendations[pref.id] != null && recommendations[pref.id].recommendations != null}">
-                    <div th:each="rec : ${recommendations[pref.id].recommendations}" class="recommendation-card">
-                        <img th:src="${rec.imageUrl}" alt="Seyahat Planı" class="plan-image">
+                <div th:if="${recommendations != null && recommendations.get(pref.id) != null && recommendations.get(pref.id).get('recommendations') != null}">
+                    <div th:each="city : ${recommendations.get(pref.id).get('recommendations')}" class="recommendation-card">
+                        <img th:src="${city.imageUrl}" alt="Seyahat Planı" class="plan-image">
                         <div class="plan-content">
-                            <h3 th:text="${rec.city + ' Turu'}">Bölge Turu</h3>
+                            <h3 th:text="${city.name + ' Turu'}">Bölge Turu</h3>
                             
                             <div class="cost-info">
                                 <p>Toplam Maliyet: <span th:text="${pref.budget + ' TL'}">0 TL</span></p>
-                                <p class="total-cost">Günlük Maliyet: <span th:text="${rec.dailyCost + ' TL'}">0 TL</span></p>
+                                <p class="total-cost">Günlük Maliyet: <span th:text="${city.dailyCost + ' TL'}">0 TL</span></p>
                             </div>
 
                             <div class="plan-details">
                                 <p><i class="fas fa-map-marker-alt"></i> Bölge: <span th:text="${pref.region}">Bölge</span></p>
                                 <p><i class="fas fa-hiking"></i> Tur Tipi: <span th:text="${pref.travelType}">Tip</span></p>
                                 <p><i class="fas fa-calendar"></i> Tarih: <span th:text="${pref.startDate + ' - ' + pref.endDate}">Tarih</span></p>
-                                <p><i class="fas fa-clock"></i> Süre: <span th:text="${rec.days + ' gün'}">0 gün</span></p>
+                                <p><i class="fas fa-clock"></i> Süre: <span th:text="${city.days + ' gün'}">0 gün</span></p>
                             </div>
                             
                             <div class="recommendation-details">
                                 <div class="activities">
                                     <h5><i class="fas fa-list"></i> Önerilen Aktiviteler</h5>
                                     <ul>
-                                        <li th:each="activity : ${rec.activities}" th:text="${activity}">Aktivite</li>
+                                        <li th:each="activity : ${city.activities}" th:text="${activity}">Aktivite</li>
                                     </ul>
                                 </div>
                                 
                                 <div class="accommodation">
                                     <h5><i class="fas fa-hotel"></i> Konaklama Seçenekleri</h5>
                                     <ul>
-                                        <li th:each="option : ${rec.accommodation}" th:text="${option}">Konaklama</li>
+                                        <li th:each="option : ${city.accommodation}" th:text="${option}">Konaklama</li>
                                     </ul>
                                 </div>
                                 
                                 <div class="transportation">
                                     <h5><i class="fas fa-plane"></i> Ulaşım Seçenekleri</h5>
                                     <ul>
-                                        <li th:each="option : ${rec.transportation}" th:text="${option}">Ulaşım</li>
+                                        <li th:each="option : ${city.transportation}" th:text="${option}">Ulaşım</li>
                                     </ul>
                                 </div>
                                 
-                                <p class="description" th:text="${rec.description}">Şehir açıklaması</p>
+                                <p class="description" th:text="${city.description}">Şehir açıklaması</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div th:if="${recommendations == null || recommendations[pref.id] == null || recommendations[pref.id].recommendations == null}" class="plan-content">
+                <div th:if="${recommendations == null || recommendations.get(pref.id) == null || recommendations.get(pref.id).get('recommendations') == null}" class="plan-content">
                     <h3>Hata</h3>
                     <div class="plan-details">
                         <p><i class="fas fa-money-bill-wave"></i> Bütçe: <span th:text="${pref.budget + ' TL'}">0 TL</span></p>

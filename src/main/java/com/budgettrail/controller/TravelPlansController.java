@@ -40,7 +40,8 @@ public class TravelPlansController {
             }
 
             String username = auth.getName();
-            User user = userService.findByUsername(username);
+            User user = userService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
             if (user == null) {
                 return "redirect:/login";
             }
