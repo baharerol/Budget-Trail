@@ -20,10 +20,22 @@ public class CityService {
     }
 
     public List<City> getCitiesByBudget(Double budget) {
-        return cityRepository.findByAverageBudgetLessThanEqual(budget);
+        return cityRepository.findByDailyCostLessThanEqual(budget);
     }
 
     public City saveCity(City city) {
         return cityRepository.save(city);
+    }
+
+    public List<City> getCitiesByRegion(String region) {
+        return cityRepository.findByRegion(region);
+    }
+
+    public List<City> getSuitableCities(String region, Double budget, Integer days) {
+        return cityRepository.findSuitableCities(region, budget, days);
+    }
+
+    public List<City> getSuitableCitiesWithActivity(String region, Double budget, Integer days, String activityType) {
+        return cityRepository.findSuitableCitiesWithActivity(region, budget, days, activityType);
     }
 } 

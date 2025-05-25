@@ -64,6 +64,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
         }
 
         .navbar-menu a:hover {
@@ -408,34 +409,36 @@
     <section id="budget-section" class="budget-section">
         <div class="budget-container">
             <h2 style="text-align: center; margin-bottom: 2rem;">Hemen başlayalım! Bütçeni ve tercihlerini gir, sana en uygun rotayı önerelim.</h2>
-            <form class="budget-form">
+            <form class="budget-form" th:action="@{/travel-preferences/save}" method="post" th:object="${newPreferences}">
                 <div class="form-group">
                     <label>💰 Bütçe (TL)</label>
-                    <input type="number" class="form-control" placeholder="Bütçenizi girin">
+                    <input type="number" class="form-control" th:field="*{budget}" placeholder="Bütçenizi girin" required>
                 </div>
                 <div class="form-group">
                     <label>🌍 Bölge Seçimi</label>
-                    <select class="form-control">
-                        <option>Avrupa</option>
-                        <option>Asya</option>
-                        <option>Yurt İçi</option>
+                    <select class="form-control" th:field="*{region}" required>
+                        <option value="Avrupa">Avrupa</option>
+                        <option value="Asya">Asya</option>
+                        <option value="Yurt İçi">Yurt İçi</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>🎒 Seyahat Türü</label>
-                    <select class="form-control">
-                        <option>Kültür</option>
-                        <option>Macera</option>
-                        <option>Dinlenme</option>
+                    <select class="form-control" th:field="*{travelType}" required>
+                        <option value="Kültür">Kültür</option>
+                        <option value="Macera">Macera</option>
+                        <option value="Dinlenme">Dinlenme</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>📆 Tarih Aralığı</label>
-                    <input type="date" class="form-control">
+                    <label>📆 Başlangıç Tarihi</label>
+                    <input type="date" class="form-control" th:field="*{startDate}" required>
                 </div>
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <button type="submit" class="btn" style="width: 100%;">🔍 Planı Görüntüle</button>
+                <div class="form-group">
+                    <label>📆 Bitiş Tarihi</label>
+                    <input type="date" class="form-control" th:field="*{endDate}" required>
                 </div>
+                <button type="submit" class="btn">Seyahat Planı Oluştur</button>
             </form>
         </div>
     </section>

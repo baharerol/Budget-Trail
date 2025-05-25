@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Budget Trail - Seyahat Planları</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #F88379;
+            --secondary-color: #E8D8C3;
+            --accent-color: #FFD1DC;
+            --text-color: #2d3436;
+            --light-bg: #f5f6fa;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--light-bg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .plan-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .plan-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .plan-content {
+            padding: 1.5rem;
+        }
+
+        .plan-content h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .plan-details {
+            margin-bottom: 1rem;
+        }
+
+        .plan-details p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .plan-details i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .recommendation-details {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--secondary-color);
+        }
+
+        .recommendation-details h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .activities, .accommodation, .transportation {
+            margin: 1.2rem 0;
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .activities h5, .accommodation h5, .transportation h5 {
+            margin-bottom: 0.8rem;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        .activities ul, .accommodation ul, .transportation ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .activities li, .accommodation li, .transportation li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .activities li:before, .accommodation li:before, .transportation li:before {
+            content: "•";
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .description {
+            margin-top: 1.2rem;
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+
+        .cost-info {
+            display: flex;
+            justify-content: space-between;
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .cost-info p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .cost-info .total-cost {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .no-plans {
+            text-align: center;
+            padding: 3rem;
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .no-plans h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Seyahat Planlarınız</h1>
+        
+        <div th:if="${preferences.empty}" class="no-plans">
+            <h2>Henüz bir seyahat planınız bulunmuyor</h2>
+            <p>Ana sayfadaki formu doldurarak size özel seyahat planları oluşturabiliriz.</p>
+            <a href="/" class="btn" style="margin-top: 1rem;">Planlama Yap</a>
+        </div>
+
+        <div th:if="${!preferences.empty}" class="plans-grid">
+            <div th:each="pref : ${preferences}" class="plan-card">
+                <div th:if="${recommendations != null && recommendations[pref.id] != null && recommendations[pref.id].recommendations != null}">
+                    <div th:each="rec : ${recommendations[pref.id].recommendations}" class="recommendation-card">
+                        <img th:src="${rec.imageUrl}" alt="Seyahat Planı" class="plan-image">
+                        <div class="plan-content">
+                            <h3 th:text="${rec.city + ' Turu'}">Bölge Turu</h3>
+                            
+                            <div class="cost-info">
+                                <p>Toplam Maliyet: <span th:text="${pref.budget + ' TL'}">0 TL</span></p>
+                                <p class="total-cost">Günlük Maliyet: <span th:text="${rec.dailyCost + ' TL'}">0 TL</span></p>
+                            </div>
+
+                            <div class="plan-details">
+                                <p><i class="fas fa-map-marker-alt"></i> Bölge: <span th:text="${pref.region}">Bölge</span></p>
+                                <p><i class="fas fa-hiking"></i> Tur Tipi: <span th:text="${pref.travelType}">Tip</span></p>
+                                <p><i class="fas fa-calendar"></i> Tarih: <span th:text="${pref.startDate + ' - ' + pref.endDate}">Tarih</span></p>
+                                <p><i class="fas fa-clock"></i> Süre: <span th:text="${rec.days + ' gün'}">0 gün</span></p>
+                            </div>
+                            
+                            <div class="recommendation-details">
+                                <div class="activities">
+                                    <h5><i class="fas fa-list"></i> Önerilen Aktiviteler</h5>
+                                    <ul>
+                                        <li th:each="activity : ${rec.activities}" th:text="${activity}">Aktivite</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="accommodation">
+                                    <h5><i class="fas fa-hotel"></i> Konaklama Seçenekleri</h5>
+                                    <ul>
+                                        <li th:each="option : ${rec.accommodation}" th:text="${option}">Konaklama</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="transportation">
+                                    <h5><i class="fas fa-plane"></i> Ulaşım Seçenekleri</h5>
+                                    <ul>
+                                        <li th:each="option : ${rec.transportation}" th:text="${option}">Ulaşım</li>
+                                    </ul>
+                                </div>
+                                
+                                <p class="description" th:text="${rec.description}">Şehir açıklaması</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${recommendations == null || recommendations[pref.id] == null || recommendations[pref.id].recommendations == null}" class="plan-content">
+                    <h3>Hata</h3>
+                    <div class="plan-details">
+                        <p><i class="fas fa-money-bill-wave"></i> Bütçe: <span th:text="${pref.budget + ' TL'}">0 TL</span></p>
+                        <p><i class="fas fa-map-marker-alt"></i> Bölge: <span th:text="${pref.region}">Bölge</span></p>
+                        <p><i class="fas fa-hiking"></i> Tur Tipi: <span th:text="${pref.travelType}">Tip</span></p>
+                        <p><i class="fas fa-calendar"></i> Tarih: <span th:text="${pref.startDate + ' - ' + pref.endDate}">Tarih</span></p>
+                        <p class="description">Bir hata oluştu. Lütfen tekrar deneyin.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

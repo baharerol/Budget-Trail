@@ -4,6 +4,8 @@ import com.budgettrail.model.User;
 import com.budgettrail.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,11 +20,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
-
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
@@ -30,11 +27,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("user") User user,
-                             BindingResult result,
+    public String registerUser(@Valid @ModelAttribute("user") User user, 
+                             @ModelAttribute("confirmPassword") String confirmPassword,
+                             BindingResult result, 
                              RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "register";
+        }
+
+        if (!user.getPassword().equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Şifreler eşleşmiyor.");
+            return "redirect:/register";
         }
 
         try {
@@ -45,5 +48,14 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/register";
         }
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            return "redirect:/";
+        }
+        return "login";
     }
 } 

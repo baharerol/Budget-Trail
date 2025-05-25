@@ -1,16 +1,10 @@
 package com.budgettrail.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity
 @Table(name = "cities")
 public class City {
@@ -25,11 +19,19 @@ public class City {
     private String country;
 
     @Column(nullable = false)
-    private String currency;
+    private String region; // Avrupa, Asya, Yurt İçi
 
-    @Column(name = "average_budget", nullable = false)
-    private Double averageBudget;
+    @Column(nullable = false)
+    private Double dailyCost; // Günlük ortalama maliyet
 
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private List<Activity> activities;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "city_activities", joinColumns = @JoinColumn(name = "city_id"))
+    @Column(name = "activity", nullable = false)
+    private List<String> activities; // Kültür, Macera, Dinlenme
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column
+    private String imageUrl;
 } 

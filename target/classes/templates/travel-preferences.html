@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seyahat Tercihleri - Budget Trail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #F88379;
+            --secondary-color: #E8D8C3;
+            --accent-color: #FFD1DC;
+            --text-color: #2d3436;
+            --light-bg: #f5f6fa;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--light-bg), var(--white));
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .preferences-container {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preferences-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .preferences-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .preferences-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="preferences-container">
+        <div class="preferences-header">
+            <h1>Seyahat Tercihleri</h1>
+            <p>Seyahat planınızı oluşturmak için tercihlerinizi girin</p>
+        </div>
+        
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        
+        <form th:action="@{/travel-preferences/save}" method="post" th:object="${preferences}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            
+            <div class="form-group">
+                <label for="budget">💰 Bütçe (TL)</label>
+                <input type="number" class="form-control" id="budget" th:field="*{budget}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="region">🌍 Bölge Seçimi</label>
+                <select class="form-control" id="region" th:field="*{region}" required>
+                    <option value="Avrupa">Avrupa</option>
+                    <option value="Asya">Asya</option>
+                    <option value="Yurt İçi">Yurt İçi</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="travelType">🎒 Seyahat Türü</label>
+                <select class="form-control" id="travelType" th:field="*{travelType}" required>
+                    <option value="Kültür">Kültür</option>
+                    <option value="Macera">Macera</option>
+                    <option value="Dinlenme">Dinlenme</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="startDate">📆 Başlangıç Tarihi</label>
+                <input type="date" class="form-control" id="startDate" th:field="*{startDate}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="endDate">📆 Bitiş Tarihi</label>
+                <input type="date" class="form-control" id="endDate" th:field="*{endDate}" required>
+            </div>
+            
+            <button type="submit" class="btn">Seyahat Planı Oluştur</button>
+        </form>
+    </div>
+</body>
+</html> 
