@@ -213,7 +213,7 @@
                     <div th:each="city : ${recommendations.get(pref.id).get('recommendations')}" class="recommendation-card">
                         <img th:src="${city.imageUrl}" alt="Seyahat Planı" class="plan-image">
                         <div class="plan-content">
-                            <h3 th:text="${city.name + ' Turu'}">Bölge Turu</h3>
+                            <h3 th:text="${city.city + ' Turu'}">Bölge Turu</h3>
                             
                             <div class="cost-info">
                                 <p>Toplam Maliyet: <span th:text="${pref.budget + ' TL'}">0 TL</span></p>
@@ -254,14 +254,14 @@
                         </div>
                     </div>
                 </div>
-                <div th:if="${recommendations == null || recommendations.get(pref.id) == null || recommendations.get(pref.id).get('recommendations') == null}" class="plan-content">
-                    <h3>Hata</h3>
+                <div th:if="${recommendations != null && recommendations.get(pref.id) != null && recommendations.get(pref.id).get('error') != null}" class="plan-content">
+                    <h3>Uyarı</h3>
                     <div class="plan-details">
                         <p><i class="fas fa-money-bill-wave"></i> Bütçe: <span th:text="${pref.budget + ' TL'}">0 TL</span></p>
                         <p><i class="fas fa-map-marker-alt"></i> Bölge: <span th:text="${pref.region}">Bölge</span></p>
                         <p><i class="fas fa-hiking"></i> Tur Tipi: <span th:text="${pref.travelType}">Tip</span></p>
                         <p><i class="fas fa-calendar"></i> Tarih: <span th:text="${pref.startDate + ' - ' + pref.endDate}">Tarih</span></p>
-                        <p class="description">Bir hata oluştu. Lütfen tekrar deneyin.</p>
+                        <p class="description" th:text="${recommendations.get(pref.id).get('message')}">Hata mesajı</p>
                     </div>
                 </div>
             </div>
