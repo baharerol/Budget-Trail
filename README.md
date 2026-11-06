@@ -1,81 +1,85 @@
-# Budget Trail - Seyahat Planlayıcı Uygulaması
+# Budget Trail
 
-Bu proje, kullanıcıların belirlediği bütçeye göre önerilen rota ve aktiviteleri görebileceği, tercihlerine göre filtreleme ve kişiselleştirme yapabileceği, veritabanı destekli, şık arayüzlü bir seyahat planlayıcıdır.
+A budget-based travel planning web application built with Spring Boot. Users set a budget, trip dates, a region and a travel type, and the app suggests destinations whose daily cost fits the budget, along with accommodation and transport options.
 
-## 🚀 Özellikler
 
-- Kullanıcı kayıt ve giriş sistemi
-- Bütçeye göre şehir ve aktivite önerileri
-- Tercihlere göre filtreleme
-- Kişiselleştirilmiş seyahat planları
-- Aktivite ve şehir yönetimi
-- REST API desteği
-- Swagger UI ile API dokümantasyonu
+## Features
 
-## 🛠️ Teknolojiler
+- User registration and login (Spring Security, session-based) with a role-based admin area
+- Seeded catalog of cities and activities (loaded from `data.sql` on startup)
+- Budget-based destination recommendations (rule-based, see [How recommendations work](#how-recommendations-work))
+- Personalized travel preferences: region, travel type, dates and budget
+- Saved travel plans and a user dashboard
+- Server-rendered UI (Thymeleaf) plus REST endpoints documented with Swagger/OpenAPI
 
-- Spring Boot 2.7.0
-- Spring Security
-- Spring Data JPA
-- MySQL
-- Thymeleaf
-- Swagger UI
+## Tech Stack
+
+- **Java 17**, **Spring Boot 3.2.3**
+- Spring Web, Spring Security, Spring Data JPA, Bean Validation
+- Thymeleaf (with Spring Security integration) for the UI
+- **H2** in-memory database (no external DB required)
+- springdoc-openapi (Swagger UI)
+- Lombok
 - Maven
 
-## 📋 Gereksinimler
+## Getting Started
 
-- Java 11
-- MySQL 8.0
+### Prerequisites
+
+- Java 17+
 - Maven 3.6+
 
-## 🔧 Kurulum
+No database setup is needed. The app runs on an in-memory H2 database that is seeded automatically at startup.
 
-1. Projeyi klonlayın:
+### Run
+
 ```bash
-git clone https://github.com/yourusername/budget-trail.git
-```
-
-2. MySQL veritabanını oluşturun:
-```sql
-CREATE DATABASE budget_trail;
-```
-
-3. `application.properties` dosyasındaki veritabanı bağlantı bilgilerini güncelleyin.
-
-4. Projeyi derleyin ve çalıştırın:
-```bash
-mvn clean install
+git clone https://github.com/baharerol/Budget-Trail.git
+cd Budget-Trail
 mvn spring-boot:run
 ```
 
-5. Tarayıcınızda şu adresi açın:
+Then open http://localhost:8080.
+
+### Default access
+
+| URL | Description |
+|-----|-------------|
+| `http://localhost:8080` | Application |
+| `http://localhost:8080/swagger-ui.html` | Interactive API documentation |
+| `http://localhost:8080/h2-console` | H2 database console |
+
+A demo admin account is preconfigured for convenience: **`admin` / `admin`** (demo only - not intended for production).
+
+## How recommendations work
+
+Recommendations are rule-based, not machine learning. Given the user's preferences, the app:
+
+1. Computes a daily budget as `budget ÷ number of days`.
+2. Fetches all cities in the selected region.
+3. Keeps cities whose daily cost is within the daily budget and whose activities match the selected travel type (falling back to a budget-only filter if none match).
+4. For each matching city, suggests accommodation tiers based on the remaining daily budget and transport options based on the region.
+
+The result is a list of affordable destinations with per-city cost, activities, and accommodation/transport suggestions.
+
+## Project structure
+
 ```
-http://localhost:8080
+src/main/java/com/budgettrail/
+├── config/      # Security, OpenAPI and MVC configuration
+├── controller/  # Web and REST controllers
+├── model/       # JPA entities (City, Activity, TravelPlan, TravelPreferences, User, ...)
+├── repository/  # Spring Data JPA repositories
+└── service/     # Business logic, incl. TravelRecommendationService
+src/main/resources/
+├── templates/   # Thymeleaf views
+├── data.sql     # Seed data
+└── application.properties
 ```
 
-## 📚 API Dokümantasyonu
+## Limitations & possible improvements
 
-Swagger UI üzerinden API dokümantasyonuna erişebilirsiniz:
-```
-http://localhost:8080/swagger-ui/
-```
-
-## 🗃️ Veritabanı Şeması
-
-- USERS: Kullanıcı bilgileri
-- CITIES: Şehir bilgileri
-- ACTIVITIES: Aktivite bilgileri
-- TRAVEL_PLANS: Seyahat planları
-- PLAN_DETAILS: Plan detayları
-
-## 👥 Katkıda Bulunma
-
-1. Bu depoyu fork edin
-2. Yeni bir özellik dalı oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add some amazing feature'`)
-4. Dalınıza push edin (`git push origin feature/amazing-feature`)
-5. Bir Pull Request oluşturun
-
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakın. 
+- The UI text is in Turkish only.
+- Recommendations are rule-based heuristics, not a learned model.
+- Data is stored in an in-memory H2 database, so it resets on every restart. A persistent database (e.g. PostgreSQL) would be needed for real use.
+- Demo credentials and the open H2 console are enabled for development convenience and would be removed/secured for production.
