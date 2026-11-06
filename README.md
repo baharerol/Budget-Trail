@@ -14,10 +14,10 @@ A budget-based travel planning web application built with Spring Boot. Users set
 
 ## Tech Stack
 
-- **Java 17**, **Spring Boot 3.2.3**
+- Java 17, Spring Boot 3.2.3
 - Spring Web, Spring Security, Spring Data JPA, Bean Validation
 - Thymeleaf (with Spring Security integration) for the UI
-- **H2** in-memory database (no external DB required)
+- H2 in-memory database (no external DB required)
 - springdoc-openapi (Swagger UI)
 - Lombok
 - Maven
